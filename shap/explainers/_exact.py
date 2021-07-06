@@ -1,6 +1,5 @@
 import logging
 import numpy as np
-from numba import jit
 from .. import links
 from ..models import Model
 from ..utils import MaskedModel, shapley_coefficients, make_masks, delta_minimization_order
@@ -175,7 +174,6 @@ class Exact(Explainer):
             "clustering": getattr(self.masker, "clustering", None)
         }
 
-@jit
 def _compute_grey_code_row_values(row_values, mask, inds, outputs, shapley_coeff, extended_delta_indexes, noop_code):
     set_size = 0
     M = len(inds)
@@ -201,7 +199,6 @@ def _compute_grey_code_row_values(row_values, mask, inds, outputs, shapley_coeff
             else:
                 row_values[j] -= out * off_coeff
 
-@jit
 def _compute_grey_code_row_values_st(row_values, mask, inds, outputs, shapley_coeff, extended_delta_indexes, noop_code):
     set_size = 0
     M = len(inds)
@@ -296,7 +293,7 @@ def _partition_masks_recurse(index, m00, ind00, ind11, inds_lists, mask_matrix, 
     m10 = m00.copy() # we separate the copy from the add so as to not get converted to a matrix
     m10[:] += mask_matrix[left_index+M, :]
     m01 = m00.copy()
-    m01[:] += mask_matrix[right_index+M, :]    
+    m01[:] += mask_matrix[right_index+M, :]
 
     # record the new masks we made
     ind01 = len(all_masks)
